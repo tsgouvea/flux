@@ -14,10 +14,11 @@ trialDur = BpodSystem.Data.RawEvents.Trial{end}.States.(listStates{visited(end)}
 
 ABC = 'ABC';
 
+tsOffSet = BpodSystem.Data.TrialStartTimestamp(end) - BpodSystem.Data.TrialStartTimestamp(1);
 for iPatch = [1 2 3]
     %% Update custom data fields
     if isfield(BpodSystem.Data.RawEvents.Trial{end}.Events,['GlobalTimer' num2str(iPatch) '_End'])
-        BpodSystem.Data.Custom.SetUps{iPatch} = [BpodSystem.Data.Custom.SetUps{iPatch}, BpodSystem.Data.TrialStartTimestamp(end) - BpodSystem.Data.TrialStartTimestamp(1) + BpodSystem.Data.RawEvents.Trial{end}.Events.(['GlobalTimer' num2str(iPatch) '_End'])];
+        BpodSystem.Data.Custom.SetUps{iPatch} = [BpodSystem.Data.Custom.SetUps{iPatch}, tsOffSet + BpodSystem.Data.RawEvents.Trial{end}.Events.(['GlobalTimer' num2str(iPatch) '_End'])];
         if ~strcmp(Latent.SetUp(end-3+iPatch),'1')
             Latent.SetUp(end-3+iPatch) = '1';
             warning(['GlobalTimer' num2str(iPatch) '_End failed to setup reward'])
@@ -25,10 +26,10 @@ for iPatch = [1 2 3]
     end
     
     if isfield(BpodSystem.Data.RawEvents.Trial{end}.Events,['Port' num2str(iPatch) 'In'])
-        BpodSystem.Data.Custom.PokeIn{iPatch} = [BpodSystem.Data.Custom.PokeIn{iPatch}, BpodSystem.Data.TrialStartTimestamp(end) - BpodSystem.Data.TrialStartTimestamp(1) + BpodSystem.Data.RawEvents.Trial{end}.Events.(['Port' num2str(iPatch) 'In'])];
+        BpodSystem.Data.Custom.PokeIn{iPatch} = [BpodSystem.Data.Custom.PokeIn{iPatch}, tsOffSet + BpodSystem.Data.RawEvents.Trial{end}.Events.(['Port' num2str(iPatch) 'In'])];
     end
     if ~isnan(BpodSystem.Data.RawEvents.Trial{end}.States.(['water_' ABC(iPatch)])(1))
-        BpodSystem.Data.Custom.Rewards{iPatch}(end+1) = BpodSystem.Data.RawEvents.Trial{end}.States.(['water_' ABC(iPatch)])(1);
+        BpodSystem.Data.Custom.Rewards{iPatch}(end+1) = tsOffSet + BpodSystem.Data.RawEvents.Trial{end}.States.(['water_' ABC(iPatch)])(1);
     end
     
     %% Update latent variables
