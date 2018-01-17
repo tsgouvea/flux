@@ -16,7 +16,8 @@ if nargin < 2 % plot initialized (either beginning of session or post-hoc analys
     GUIHandles.Figs.MainFig = figure('Position', [1500, 400, 1000, 400],'name','Outcome plot','numbertitle','off', 'MenuBar', 'none', 'Resize', 'off');
     
     GUIHandles.Axes.SessionLong.MainHandle = axes('Position', [.06 .15 .91 .3]); hold on
-    
+    GUIHandles.Axes.SessionLong.CumRwd = text(GUIHandles.Axes.SessionLong.MainHandle,10,.5,'0mL','verticalalignment','bottom','horizontalalignment','center');
+        
     GUIHandles.Axes.Matching.MainHandle = axes('Position', [[1 0]*[.06;.12] .6 .12 .3],'xlim',[0 1],'ylim',[0 1]); hold on
     GUIHandles.Axes.Matching.MainHandle.XLabel.String = 'Fraction visits';
     GUIHandles.Axes.Matching.MainHandle.YLabel.String = 'Fraction rewards';
@@ -204,4 +205,6 @@ if nargin > 0
 %     GUIHandles.Axes.PCTH.MainHandle.YLim(2) = max(GUIHandles.Axes.PCTH.MainHandle.YLim(2), 1.1*max(GUIHandles.Axes.PCTH.Hist(iPatch).YData));
 %     GUIHandles.Axes.PCTH.MainHandle.YLim = [-.1 1]*GUIHandles.Axes.PCTH.MainHandle.YLim(2);
 % end
+    set(GUIHandles.Axes.SessionLong.CumRwd,'string', ...
+        [num2str(Data.nTrials*TaskParameters.GUI.rewardAmount/1000) ' mL']);
 end

@@ -37,7 +37,7 @@ BpodParameterGUI('init', TaskParameters);
 % BpodSystem.Data.Custom.Intervals2 = exprnd(TaskParameters.GUI.MeanB,500,1);
 % BpodSystem.Data.Custom.Intervals3 = exprnd(TaskParameters.GUI.MeanC,500,1);
 
-Latent.SetUp = '000';
+Latent.SetUp = '111';
 if TaskParameters.GUI.VI
     Latent.Ints = exprnd([TaskParameters.GUI.MeanA, TaskParameters.GUI.MeanB, TaskParameters.GUI.MeanC]);
 else
