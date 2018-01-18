@@ -116,7 +116,7 @@ if nargin > 0
         rowOffset = 0;
         GUIHandles.Axes.PSTH.MainHandle.XLim = [min(binEdges) max(binEdges)];
         GUIHandles.Axes.PSTHraster.MainHandle.XLim = [min(binEdges) max(binEdges)];
-        
+        GUIHandles.Axes.PSTH.MainHandle.YLim(2) = .001;
         for iPatch = 1:3
             tsSwi = Data.Custom.TsPoke(Data.Custom.IdPoke==iPatch & Data.Custom.ndxSwitch & Data.Custom.TsPoke>tsAllRewards);
             
