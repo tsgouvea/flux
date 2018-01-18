@@ -96,6 +96,8 @@ while RunSession
     
     updateCustomDataFields()
 %     iTrial = iTrial + 1;
-    BpodSystem.GUIHandles = SessionSummary(BpodSystem.Data, BpodSystem.GUIHandles);
+    try
+        BpodSystem.GUIHandles = SessionSummary(BpodSystem.Data, BpodSystem.GUIHandles);
+    end
 end
 end
