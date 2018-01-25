@@ -41,6 +41,7 @@ if nargin < 2 % plot initialized (either beginning of session or post-hoc analys
     GUIHandles.Axes.PCTH.MainHandle.YLim = [0 0.0001];
     
     GUIHandles.Axes.Switches.MainHandle = axes('Position', [[5 4]*[.06;.12] .6 .12 .3]);hold on
+    view(GUIHandles.Axes.Switches.MainHandle,ones(1,3))
     GUIHandles.Axes.Switches.MainHandle.XLabel.String = 'time since r_1';
     GUIHandles.Axes.Switches.MainHandle.YLabel.String = 'time since r_2';
     GUIHandles.Axes.Switches.MainHandle.ZLabel.String = 'time since r_3';
