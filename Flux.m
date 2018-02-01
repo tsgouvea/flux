@@ -10,9 +10,9 @@ global sessionTimer
 TaskParameters = BpodSystem.ProtocolSettings;
 if isempty(fieldnames(TaskParameters))
     
-    TaskParameters.GUI.MeanA = 3;
-    TaskParameters.GUI.MeanB = 9;
-    TaskParameters.GUI.MeanC = 27;
+    TaskParameters.GUI.MeanA = 60;
+    TaskParameters.GUI.MeanB = 90;
+    TaskParameters.GUI.MeanC = 120;
     TaskParameters.GUI.VI = false; % random ITI
     TaskParameters.GUIMeta.VI.Style = 'checkbox';
     TaskParameters.GUI.IntA = NaN;
@@ -23,11 +23,22 @@ if isempty(fieldnames(TaskParameters))
     TaskParameters.GUIMeta.IntC.Style = 'text';
     TaskParameters.GUIPanels.Intervals = {'MeanA','IntA','MeanB','IntB','MeanC','IntC','VI'};
     
+    %% Reward
+    TaskParameters.GUI.rewFirst = 76;
+    TaskParameters.GUI.rewLast = 5;
+    TaskParameters.GUI.rewN = 3;
+    TaskParameters.GUI.rewSum = round(sum(TaskParameters.GUI.rewFirst*(TaskParameters.GUI.rewLast/TaskParameters.GUI.rewFirst).^([0:TaskParameters.GUI.rewN-1]/(TaskParameters.GUI.rewN-1))));
+    TaskParameters.GUIMeta.rewSum.Style = 'text';
+    TaskParameters.GUI.IRI = 1;
+    TaskParameters.GUIPanels.Reward = {'rewFirst','rewLast','rewN','rewSum','IRI'};
+    
     %% General
     TaskParameters.GUI.Ports_ABC = '123';
-    TaskParameters.GUI.rewardAmount = 100;
-    TaskParameters.GUIPanels.General = {'Ports_ABC','rewardAmount'};
+    TaskParameters.GUIPanels.General = {'Ports_ABC'};
+    
+    %%
     TaskParameters.GUI = orderfields(TaskParameters.GUI);
+    
 end
 BpodParameterGUI('init', TaskParameters);
 
@@ -37,7 +48,8 @@ BpodParameterGUI('init', TaskParameters);
 % BpodSystem.Data.Custom.Intervals2 = exprnd(TaskParameters.GUI.MeanB,500,1);
 % BpodSystem.Data.Custom.Intervals3 = exprnd(TaskParameters.GUI.MeanC,500,1);
 
-Latent.SetUp = '111';
+% Latent.SetUp = '111';
+Latent.State1 = 'setup111';
 if TaskParameters.GUI.VI
     Latent.Ints = exprnd([TaskParameters.GUI.MeanA, TaskParameters.GUI.MeanB, TaskParameters.GUI.MeanC]);
 else
