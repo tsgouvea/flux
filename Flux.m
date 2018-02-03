@@ -30,7 +30,13 @@ if isempty(fieldnames(TaskParameters))
     TaskParameters.GUI.rewSum = round(sum(TaskParameters.GUI.rewFirst*(TaskParameters.GUI.rewLast/TaskParameters.GUI.rewFirst).^([0:TaskParameters.GUI.rewN-1]/(TaskParameters.GUI.rewN-1))));
     TaskParameters.GUIMeta.rewSum.Style = 'text';
     TaskParameters.GUI.IRI = 1;
-    TaskParameters.GUIPanels.Reward = {'rewFirst','rewLast','rewN','rewSum','IRI'};
+    TaskParameters.GUI.rewA = TaskParameters.GUI.rewFirst;
+    TaskParameters.GUIMeta.rewA.Style = 'text';
+    TaskParameters.GUI.rewB = TaskParameters.GUI.rewFirst;
+    TaskParameters.GUIMeta.rewB.Style = 'text';
+    TaskParameters.GUI.rewC = TaskParameters.GUI.rewFirst;
+    TaskParameters.GUIMeta.rewC.Style = 'text';
+    TaskParameters.GUIPanels.Reward = {'rewFirst','rewLast','rewN','rewSum','IRI','rewA','rewB','rewC'};
     
     %% General
     TaskParameters.GUI.Ports_ABC = '123';
@@ -44,10 +50,6 @@ BpodParameterGUI('init', TaskParameters);
 
 %% Trial type vectors
 
-% BpodSystem.Data.Custom.Intervals1 = exprnd(TaskParameters.GUI.MeanA,500,1);
-% BpodSystem.Data.Custom.Intervals2 = exprnd(TaskParameters.GUI.MeanB,500,1);
-% BpodSystem.Data.Custom.Intervals3 = exprnd(TaskParameters.GUI.MeanC,500,1);
-
 % Latent.SetUp = '111';
 Latent.State1 = 'setup111';
 if TaskParameters.GUI.VI
@@ -58,11 +60,22 @@ end
 TaskParameters.GUI.IntA = Latent.Ints(1);
 TaskParameters.GUI.IntB = Latent.Ints(2);
 TaskParameters.GUI.IntC = Latent.Ints(3);
-Latent.IntSma = Latent.Ints(:)';
+Latent.ClocksSMA = Latent.Ints(:)';
 
-BpodSystem.Data.Custom.SetUps = cell(1,3);
-BpodSystem.Data.Custom.PokeIn = cell(1,3);
-BpodSystem.Data.Custom.Rewards = cell(1,3);
+Latent.rewA = TaskParameters.GUI.rewFirst;
+Latent.rewB = TaskParameters.GUI.rewFirst;
+Latent.rewC = TaskParameters.GUI.rewFirst;
+
+% ValveATime  = GetValveTimes(TaskParameters.GUI.rewFirst*(TaskParameters.GUI.rewLast/...
+%     TaskParameters.GUI.rewFirst)^(str2double(stateName(7))/TaskParameters.GUI.rewN), PortA);
+% ValveBTime  = GetValveTimes(TaskParameters.GUI.rewFirst*(TaskParameters.GUI.rewLast/...
+%     TaskParameters.GUI.rewFirst)^(str2double(stateName(8))/TaskParameters.GUI.rewN), PortB);
+% ValveCTime  = GetValveTimes(TaskParameters.GUI.rewFirst*(TaskParameters.GUI.rewLast/...
+%     TaskParameters.GUI.rewFirst)^(str2double(stateName(9))/TaskParameters.GUI.rewN), PortC);
+
+% BpodSystem.Data.Custom.SetUps = cell(1,3);
+% BpodSystem.Data.Custom.PokeIn = cell(1,3);
+% BpodSystem.Data.Custom.Rewards = cell(1,3);
 
 %% Server data
 BpodSystem.Data.Custom.Rig = getenv('computername');
