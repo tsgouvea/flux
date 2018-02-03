@@ -65,6 +65,7 @@ Latent.ClocksSMA = Latent.Ints(:)';
 Latent.rewA = TaskParameters.GUI.rewFirst;
 Latent.rewB = TaskParameters.GUI.rewFirst;
 Latent.rewC = TaskParameters.GUI.rewFirst;
+Latent.ListX = native2unicode([48:57,65:90,97:122]);
 
 % ValveATime  = GetValveTimes(TaskParameters.GUI.rewFirst*(TaskParameters.GUI.rewLast/...
 %     TaskParameters.GUI.rewFirst)^(str2double(stateName(7))/TaskParameters.GUI.rewN), PortA);
