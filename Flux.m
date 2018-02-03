@@ -119,7 +119,7 @@ while RunSession
         return
     end
     
-    updateCustomDataFields()
+    updateControlVars()
 %     iTrial = iTrial + 1;
     try
         BpodSystem.GUIHandles = SessionSummary(BpodSystem.Data, BpodSystem.GUIHandles);

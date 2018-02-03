@@ -1,4 +1,4 @@
-function updateCustomDataFields()
+function updateControlVars()
 %% Define variables
 global BpodSystem
 global TaskParameters
