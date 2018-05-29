@@ -48,7 +48,7 @@ elseif strncmp(stateName,'water',5)
 elseif strncmp(stateName,'IRI',3)
     for iPatch = 1:numel(ABC)
         if strcmp(stateName(5),ABC(iPatch)) % PATCH WHERE LAST REWARD WAS OBTAINED
-            smaChange = {smaChange{:}, 'GlobalTimer4_End',['setup' stateName(end-2:end)]}; % THIS WILL BREAK IF ANIMAL COLLECTS >9 REWARDS ON SAME SIDE
+            smaChange = {smaChange{:}, 'GlobalTimer4_End',['setup' stateName(end-2:end)]}; % THIS WILL BREAK IF ANIMAL COLLECTS >numel(ListX) REWARDS ON SAME SIDE
         else % ALL OTHER PATCHES
             if strcmp(stateName(end-3+iPatch),'0')
                 nextState = stateName; nextState(end-3+iPatch) = '1';
