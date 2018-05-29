@@ -39,8 +39,10 @@ if isempty(fieldnames(TaskParameters))
     TaskParameters.GUIPanels.Reward = {'rewFirst','rewLast','rewN','rewSum','IRI','rewA','rewB','rewC'};
     
     %% General
+    TaskParameters.GUI.Cued = true; % light on when reward available
+    TaskParameters.GUIMeta.Cued.Style = 'checkbox';
     TaskParameters.GUI.Ports_ABC = '123';
-    TaskParameters.GUIPanels.General = {'Ports_ABC'};
+    TaskParameters.GUIPanels.General = {'Ports_ABC','Cued'};
     
     %%
     TaskParameters.GUI = orderfields(TaskParameters.GUI);
