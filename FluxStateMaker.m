@@ -8,7 +8,7 @@ end
 stateName = sma.StateNames{find(~logical(sma.StatesDefined),1)};
 
 try
-    assert(strncmp(stateName,'IRI',3) | strncmp(stateName,'setup',5) | strncmp(stateName,'water',5))
+    assert(strncmp(stateName,'IRI',3) | strncmp(stateName,'setup',5) | strncmp(stateName,'water',5) | strncmp(stateName,'reset',5))
 catch
     error('Don''t know how to handle state with this name (TG, Feb1 18)')
 end
@@ -29,8 +29,8 @@ if strncmp(stateName,'setup',5)
             smaChange = {smaChange{:}, ['GlobalTimer' num2str(iPatch) '_End'],nextState};
             for jPatch = find(1:3~=iPatch)
                 if find(Latent.ListX == stateName(end-3+jPatch)) > find(Latent.ListX == '1')
-                    PortIn = ['Port' num2str(floor(mod(TaskParameters.GUI.Ports_ABC/10^(3-iPatch),10))) 'In'];
-                    nextState = stateName; nextState(5+jPatch) = '0';
+                    PortIn = ['Port' Ports_ABC(iPatch) 'In'];
+                    nextState = stateName; nextState(1:5) = 'reset'; nextState(5+jPatch) = '0';                    
                     smaChange = {smaChange{:}, PortIn, nextState};
                 end
             end
@@ -65,9 +65,9 @@ elseif strncmp(stateName,'IRI',3)
                 smaChange = {smaChange{:}, ['GlobalTimer' num2str(iPatch) '_End'],nextState};
                 for jPatch = find(1:3~=iPatch)
                     if find(Latent.ListX == stateName(end-3+jPatch)) > find(Latent.ListX == '1')
-                        PortIn = ['Port' num2str(floor(mod(TaskParameters.GUI.Ports_ABC/10^(3-iPatch),10))) 'In'];
                         assert(find(ABC==stateName(5))==jPatch)
-                        nextState = ['setup' stateName(end-2:end)]; nextState(end-3+jPatch) = '0';
+                        PortIn = ['Port' Ports_ABC(iPatch) 'In'];
+                        nextState = ['reset' stateName(end-2:end)]; nextState(end-3+jPatch) = '0';
                         smaChange = {smaChange{:}, PortIn, nextState};
                     end
                 end
@@ -80,6 +80,9 @@ elseif strncmp(stateName,'IRI',3)
         end
     end
     smaOut = {smaOut{:}, 'GlobalTimerTrig', 4};
+elseif strncmp(stateName,'reset',5)
+    smaChange = {'Tup','exit'};
+    smaOut = {};
 elseif strcmp(stateName,'exit')
     return
 end
