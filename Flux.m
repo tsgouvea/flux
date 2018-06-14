@@ -93,6 +93,18 @@ for i = fieldnames(temp)'
 end
 clear temp
 BpodNotebook('init');
+
+%% User Session Start-Script
+temp = randsample([TaskParameters.GUI.MeanA, TaskParameters.GUI.MeanB, TaskParameters.GUI.MeanC],3);
+TaskParameters.GUI.MeanA = temp(1);
+TaskParameters.GUI.MeanB = temp(2);
+TaskParameters.GUI.MeanC = temp(3);
+clear temp
+
+set(BpodSystem.GUIHandles.ParameterGUI.Params{strcmp(BpodSystem.GUIData.ParameterGUI.ParamNames,'MeanA')}, 'String', TaskParameters.GUI.MeanA);
+set(BpodSystem.GUIHandles.ParameterGUI.Params{strcmp(BpodSystem.GUIData.ParameterGUI.ParamNames,'MeanB')}, 'String', TaskParameters.GUI.MeanB);
+set(BpodSystem.GUIHandles.ParameterGUI.Params{strcmp(BpodSystem.GUIData.ParameterGUI.ParamNames,'MeanC')}, 'String', TaskParameters.GUI.MeanC);
+
 %% Main loop
 RunSession = true;
 % iTrial = 1;
