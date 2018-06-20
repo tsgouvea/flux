@@ -39,10 +39,12 @@ if isempty(fieldnames(TaskParameters))
     TaskParameters.GUIPanels.Reward = {'rewFirst','rewLast','rewN','rewSum','IRI','rewA','rewB','rewC'};
     
     %% General
+    TaskParameters.GUI.Deplete = false; % false: classic concurrent VI; true: rew magnitude decays for repeated responses, resets after different arm visited
+    TaskParameters.GUIMeta.Deplete.Style = 'checkbox';
     TaskParameters.GUI.Cued = true; % light on when reward available
     TaskParameters.GUIMeta.Cued.Style = 'checkbox';
     TaskParameters.GUI.Ports_ABC = '123';
-    TaskParameters.GUIPanels.General = {'Ports_ABC','Cued'};
+    TaskParameters.GUIPanels.General = {'Ports_ABC','Cued','Deplete'};
     
     %%
     TaskParameters.GUI = orderfields(TaskParameters.GUI);
