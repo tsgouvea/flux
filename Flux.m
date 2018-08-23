@@ -82,6 +82,7 @@ Latent.ListX = native2unicode([48:57,65:90,97:122]);
 % BpodSystem.Data.Custom.PokeIn = cell(1,3);
 % BpodSystem.Data.Custom.Rewards = cell(1,3);
 
+getgit()
 %% Server data
 BpodSystem.Data.Custom.Rig = getenv('computername');
 [~,BpodSystem.Data.Custom.Subject] = fileparts(fileparts(fileparts(fileparts(BpodSystem.DataPath))));
