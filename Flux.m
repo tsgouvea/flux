@@ -9,7 +9,7 @@ global sessionTimer
 %% Task parameters
 TaskParameters = BpodSystem.ProtocolSettings;
 if isempty(fieldnames(TaskParameters))
-    
+
     TaskParameters.GUI.MeanA = 60;
     TaskParameters.GUI.MeanB = 90;
     TaskParameters.GUI.MeanC = 120;
@@ -22,7 +22,7 @@ if isempty(fieldnames(TaskParameters))
     TaskParameters.GUIMeta.IntB.Style = 'text';
     TaskParameters.GUIMeta.IntC.Style = 'text';
     TaskParameters.GUIPanels.Intervals = {'MeanA','IntA','MeanB','IntB','MeanC','IntC','VI'};
-    
+
     %% Reward
     TaskParameters.GUI.rewFirst = 76;
     TaskParameters.GUI.rewLast = 5;
@@ -37,7 +37,7 @@ if isempty(fieldnames(TaskParameters))
     TaskParameters.GUI.rewC = TaskParameters.GUI.rewFirst;
     TaskParameters.GUIMeta.rewC.Style = 'text';
     TaskParameters.GUIPanels.Reward = {'rewFirst','rewLast','rewN','rewSum','IRI','rewA','rewB','rewC'};
-    
+
     %% General
     TaskParameters.GUI.Deplete = false; % false: classic concurrent VI; true: rew magnitude decays for repeated responses, resets after different arm visited
     TaskParameters.GUIMeta.Deplete.Style = 'checkbox';
@@ -45,10 +45,10 @@ if isempty(fieldnames(TaskParameters))
     TaskParameters.GUIMeta.Cued.Style = 'checkbox';
     TaskParameters.GUI.Ports_ABC = '123';
     TaskParameters.GUIPanels.General = {'Ports_ABC','Cued','Deplete'};
-    
+
     %%
     TaskParameters.GUI = orderfields(TaskParameters.GUI);
-    
+
 end
 BpodParameterGUI('init', TaskParameters);
 
@@ -114,9 +114,10 @@ RunSession = true;
 sessionTimer = tic;
 
 while RunSession
-    
+
     TaskParameters = BpodParameterGUI('sync', TaskParameters);
-    
+    BpodSystem.ProtocolSettings = TaskParameters;
+
     sma = stateMatrix();
     SendStateMatrix(sma);
     RawEvents = RunStateMatrix;
@@ -124,19 +125,19 @@ while RunSession
         BpodSystem.Data = AddTrialEvents(BpodSystem.Data,RawEvents);
         SaveBpodSessionData;
     end
-    
-    
+
+
 %     timeStamps = BpodSystem.Data.RawData.OriginalStateTimestamps{:};
 %     if strcmp(Latent.SetUp(1),'0')
 % %         elapsedA = max(timeStamps)-min(timeStamps)
 
 %     end
-    
+
     HandlePauseCondition; % Checks to see if the protocol is paused. If so, waits until user resumes.
     if BpodSystem.BeingUsed == 0
         return
     end
-    
+
     updateControlVars()
 %     iTrial = iTrial + 1;
     try
