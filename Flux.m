@@ -39,12 +39,15 @@ if isempty(fieldnames(TaskParameters))
     TaskParameters.GUIPanels.Reward = {'rewFirst','rewLast','rewN','rewSum','IRI','rewA','rewB','rewC'};
 
     %% General
+    TaskParameters.GUI.isBridgeUp = false;
+    TaskParameters.GUIMeta.isBridgeUp.Style = 'checkbox';
+    TaskParameters.GUI.BridgeWhen = 20; % in min
     TaskParameters.GUI.Deplete = false; % false: classic concurrent VI; true: rew magnitude decays for repeated responses, resets after different arm visited
     TaskParameters.GUIMeta.Deplete.Style = 'checkbox';
     TaskParameters.GUI.Cued = true; % light on when reward available
     TaskParameters.GUIMeta.Cued.Style = 'checkbox';
     TaskParameters.GUI.Ports_ABC = '123';
-    TaskParameters.GUIPanels.General = {'Ports_ABC','Cued','Deplete'};
+    TaskParameters.GUIPanels.General = {'Ports_ABC','Cued','Deplete','isBridgeUp','BridgeWhen'};
 
     %%
     TaskParameters.GUI = orderfields(TaskParameters.GUI);
@@ -114,11 +117,14 @@ RunSession = true;
 sessionTimer = tic;
 
 while RunSession
-
+    if  toc(sessionTimer) > TaskParameters.GUI.BridgeWhen*60
+        TaskParameters.GUI.isBridgeUp = true ;
+        set(BpodSystem.GUIHandles.ParameterGUI.Params{strcmp(BpodSystem.GUIData.ParameterGUI.ParamNames,'isBridgeUp')}, 'Value', TaskParameters.GUI.isBridgeUp);
+    end
     TaskParameters = BpodParameterGUI('sync', TaskParameters);
     BpodSystem.ProtocolSettings = TaskParameters;
 
-    sma = stateMatrix();
+    sma = stateMatrix(TaskParameters.GUI.isBridgeUp);
     SendStateMatrix(sma);
     RawEvents = RunStateMatrix;
     if ~isempty(fieldnames(RawEvents))
