@@ -64,6 +64,7 @@ if TaskParameters.GUI.VI
 else
     Latent.Ints = [TaskParameters.GUI.MeanA, TaskParameters.GUI.MeanB, TaskParameters.GUI.MeanC];
 end
+Latent.Ints = min(Latent.Ints,3600); % Bpod limit
 TaskParameters.GUI.IntA = Latent.Ints(1);
 TaskParameters.GUI.IntB = Latent.Ints(2);
 TaskParameters.GUI.IntC = Latent.Ints(3);

@@ -77,6 +77,7 @@ for iPatch = [1 2 3]
         elseif strcmp(Latent.State1(end-3+iPatch),'0')
             Latent.ClocksSMA(iPatch) = max(Latent.ClocksSMA(iPatch)-trialDur, 1);
         end
-    end
+    end    
 end
+Latent.ClocksSMA = min(Latent.ClocksSMA,3600);%Bpod limit
 end
