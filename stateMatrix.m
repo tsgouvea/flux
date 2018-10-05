@@ -1,6 +1,6 @@
 function sma = stateMatrix(varargin)
 p = inputParser;
-addOptional(p,'isBridgeUp',false,@(x) islogical(x));
+addOptional(p,'isBridgeUp',false);
 parse(p,varargin{:});
 isBridgeUp = p.Results.isBridgeUp;
 
