@@ -8,7 +8,8 @@ end
 stateName = sma.StateNames{find(~logical(sma.StatesDefined),1)};
 
 try
-    assert(strncmp(stateName,'IRI',3) | strncmp(stateName,'setup',5) | strncmp(stateName,'water',5) | strncmp(stateName,'reset',5))
+    assert(strncmp(stateName,'IRI',3) | strncmp(stateName,'setup',5) | strncmp(stateName,'water',5) | strncmp(stateName,'reset',5)...
+        | strncmp(stateName, 'jack',4) | strncmp(stateName, 'bigWater',8))
 catch
     error('Don''t know how to handle state with this name (TG, Feb1 18)')
 end
@@ -42,6 +43,22 @@ if strncmp(stateName,'setup',5)
                 smaOut = {smaOut{:}, strcat('PWM',Ports_ABC(iPatch)),255};
             end
         end
+    end
+    if TaskParameters.GUI.isJack
+        stateJack = 'jack000';
+        if any(strfind(stateName,'0'))
+            if numel(strfind(stateName,'0'))==1
+                ndx = strfind(stateName,'0')-5;
+            else
+                ndx = randsample(strfind(stateName,'0'),1)-5;
+            end
+        elseif any(strfind(stateName,'1'))
+            ndx = randsample(strfind(stateName,'1'),1)-5;
+        else
+            ndx = randi(3);
+        end
+        stateJack(4+ndx) = '1';
+        smaChange = {smaChange{:}, 'GlobalTimer5_End',stateJack};
     end
 elseif strncmp(stateName,'water',5)
     Port = floor(mod(TaskParameters.GUI.Ports_ABC/10^(3-find(ABC==stateName(end))),10));
@@ -80,6 +97,16 @@ elseif strncmp(stateName,'IRI',3)
         end
     end
     smaOut = {smaOut{:}, 'GlobalTimerTrig', 4};
+elseif strncmp(stateName, 'jack',4)
+    ndxPatch = strfind(stateName,'1')-4;
+    smaChange = {['Port' num2str(ndxPatch) 'In'],['bigWater_' ABC(ndxPatch)]};
+    smaOut = {'WireState',2^(ndxPatch-1)};
+elseif strncmp(stateName, 'bigWater',8)
+    Port = floor(mod(TaskParameters.GUI.Ports_ABC/10^(3-find(ABC==stateName(end))),10));
+    ValveTime = GetValveTimes(TaskParameters.GUI.rewFirst*TaskParameters.GUI.JackSize, Port);
+    smaTimer = ValveTime;
+    smaChange = {'Tup','exit'};
+    smaOut = {smaOut{:}, 'ValveState', 2^(Port-1)};
 elseif strncmp(stateName,'reset',5)
     smaChange = {'Tup','exit'};
     smaOut = {};

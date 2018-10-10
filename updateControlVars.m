@@ -13,7 +13,7 @@ if numel(visited) == 1
 end
 
 %% Set State1 for next trial
-if (strncmp('water',listStates{visited(end)},5))
+if (strncmp('water',listStates{visited(end)},5)) || strncmp('bigWater',listStates{visited(end)},8)
     ndxRwdArm = listStates{visited(end)}(end)==ABC;
     if TaskParameters.GUI.Deplete
         Latent.State1 = ['IRI_' ABC(ndxRwdArm) '_' listStates{visited(end-1)}(end-2:end)];
@@ -79,5 +79,19 @@ for iPatch = [1 2 3]
         end
     end    
 end
+
+if TaskParameters.GUI.isJack
+    if strncmp(listStates{visited(end)}, 'bigWater',8)
+        Latent.jackNext = ceil(TruncatedExponential(TaskParameters.GUI.JackMin, TaskParameters.GUI.JackMax, TaskParameters.GUI.JackLambda));
+    else
+        Latent.jackNext = Latent.jackNext-trialDur;
+    end
+    Latent.jackNext = max(Latent.jackNext,0);
+    Latent.jackNext = min(Latent.jackNext,3600); % Bpod limit
+else
+    Latent.jackNext = nan;
+end
+TaskParameters.GUI.JackNext = Latent.jackNext;
+
 Latent.ClocksSMA = min(Latent.ClocksSMA,3600);%Bpod limit
 end

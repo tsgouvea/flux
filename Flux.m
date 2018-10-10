@@ -39,6 +39,14 @@ if isempty(fieldnames(TaskParameters))
     TaskParameters.GUIPanels.Reward = {'rewFirst','rewLast','rewN','rewSum','IRI','rewA','rewB','rewC'};
 
     %% General
+    TaskParameters.GUI.isJack = true;
+    TaskParameters.GUIMeta.isJack.Style = 'checkbox';    
+    TaskParameters.GUI.JackSize = 3; % reward size multipl factor
+    TaskParameters.GUI.JackMin = 60; % in seconds
+    TaskParameters.GUI.JackLambda = 60*5; % in seconds
+    TaskParameters.GUI.JackMax = 60*20; % in seconds
+    TaskParameters.GUI.JackNext = 0; % in seconds
+    TaskParameters.GUIMeta.JackNext.Style = 'text';
     TaskParameters.GUI.isBridgeUp = false;
     TaskParameters.GUIMeta.isBridgeUp.Style = 'checkbox';
     TaskParameters.GUI.BridgeWhen = 20; % in min
@@ -47,7 +55,7 @@ if isempty(fieldnames(TaskParameters))
     TaskParameters.GUI.Cued = true; % light on when reward available
     TaskParameters.GUIMeta.Cued.Style = 'checkbox';
     TaskParameters.GUI.Ports_ABC = '123';
-    TaskParameters.GUIPanels.General = {'Ports_ABC','Cued','Deplete','isBridgeUp','BridgeWhen'};
+    TaskParameters.GUIPanels.General = {'Ports_ABC','Cued','Deplete','isBridgeUp','BridgeWhen','isJack','JackSize','JackMin','JackMax','JackLambda','JackNext'};
 
     %%
     TaskParameters.GUI = orderfields(TaskParameters.GUI);
@@ -74,6 +82,13 @@ Latent.rewA = TaskParameters.GUI.rewFirst;
 Latent.rewB = TaskParameters.GUI.rewFirst;
 Latent.rewC = TaskParameters.GUI.rewFirst;
 Latent.ListX = native2unicode([48:57,65:90,97:122]);
+if TaskParameters.GUI.isJack
+    Latent.jackNext = ceil(TruncatedExponential(TaskParameters.GUI.JackMin, TaskParameters.GUI.JackMax, TaskParameters.GUI.JackLambda));
+    Latent.jackNext = min(Latent.jackNext,3600); % Bpod limit
+else
+    Latent.jackNext = nan;
+end
+TaskParameters.GUI.JackNext = Latent.jackNext;
 
 % ValveATime  = GetValveTimes(TaskParameters.GUI.rewFirst*(TaskParameters.GUI.rewLast/...
 %     TaskParameters.GUI.rewFirst)^(str2double(stateName(7))/TaskParameters.GUI.rewN), PortA);
