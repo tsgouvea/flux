@@ -81,7 +81,7 @@ for iPatch = [1 2 3]
 end
 
 if TaskParameters.GUI.isJack
-    if strncmp(listStates{visited(end)}, 'bigWater',8) || isnan(Latent.jackNext) || Latent.jackNext==0
+    if strncmp(listStates{visited(end)}, 'bigWater',8) || isnan(Latent.jackNext)% || Latent.jackNext==0
         Latent.jackNext = ceil(TruncatedExponential(TaskParameters.GUI.JackMin, TaskParameters.GUI.JackMax, TaskParameters.GUI.JackLambda));
     else
         Latent.jackNext = Latent.jackNext-trialDur;

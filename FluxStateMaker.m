@@ -44,21 +44,10 @@ if strncmp(stateName,'setup',5)
             end
         end
     end
-    if TaskParameters.GUI.isJack
+    if ~strcmp(stateName(end),'0') && TaskParameters.GUI.isJack && Latent.jackNext==0
         stateJack = 'jack000';
-        if any(strfind(stateName,'0'))
-            if numel(strfind(stateName,'0'))==1
-                ndx = strfind(stateName,'0')-5;
-            else
-                ndx = randsample(strfind(stateName,'0'),1)-5;
-            end
-        elseif any(strfind(stateName,'1'))
-            ndx = randsample(strfind(stateName,'1'),1)-5;
-        else
-            ndx = randi(3);
-        end
-        stateJack(4+ndx) = '1';
-        smaChange = {smaChange{:}, 'GlobalTimer5_End',stateJack};
+        stateJack(4+randi(2)) = '1';
+        smaChange = {smaChange{:}, 'SoftCode5',stateJack};
     end
 elseif strncmp(stateName,'water',5)
     Port = floor(mod(TaskParameters.GUI.Ports_ABC/10^(3-find(ABC==stateName(end))),10));
