@@ -46,17 +46,20 @@ if strncmp(stateName,'setup',5)
     end
     if TaskParameters.GUI.isJack
         stateJack = 'jack000';
-        if any(strfind(stateName,'0'))
-            if numel(strfind(stateName,'0'))==1
-                ndx = strfind(stateName,'0')-5;
-            else
-                ndx = randsample(strfind(stateName,'0'),1)-5;
-            end
-        elseif any(strfind(stateName,'1'))
-            ndx = randsample(strfind(stateName,'1'),1)-5;
-        else
-            ndx = randi(3);
-        end
+        ndx = [1,2,3];
+        ndx = ndx(ndx~=Latent.lastReward);
+        ndx = randsample(ndx,1);
+%         if any(strfind(stateName,'0'))
+%             if numel(strfind(stateName,'0'))==1
+%                 ndx = strfind(stateName,'0')-5;
+%             else
+%                 ndx = randsample(strfind(stateName,'0'),1)-5;
+%             end
+%         elseif any(strfind(stateName,'1'))
+%             ndx = randsample(strfind(stateName,'1'),1)-5;
+%         else
+%             ndx = randi(3);
+%         end
         stateJack(4+ndx) = '1';
         smaChange = {smaChange{:}, 'GlobalTimer5_End',stateJack};
     end

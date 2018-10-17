@@ -11,6 +11,7 @@ visited = BpodSystem.Data.RawData.OriginalStateData(end); visited = visited{:};
 if numel(visited) == 1
     return
 end
+Latent.lastReward = find(listStates{visited(end)}(end)==ABC);
 
 %% Set State1 for next trial
 if (strncmp('water',listStates{visited(end)},5)) || strncmp('bigWater',listStates{visited(end)},8)
@@ -81,12 +82,13 @@ for iPatch = [1 2 3]
 end
 
 if TaskParameters.GUI.isJack
-    if strncmp(listStates{visited(end)}, 'bigWater',8) || isnan(Latent.jackNext) || Latent.jackNext==0
+    if strncmp(listStates{visited(end)}, 'bigWater',8) || isnan(Latent.jackNext)% || Latent.jackNext==0
         Latent.jackNext = ceil(TruncatedExponential(TaskParameters.GUI.JackMin, TaskParameters.GUI.JackMax, TaskParameters.GUI.JackLambda));
     else
         Latent.jackNext = Latent.jackNext-trialDur;
     end
-    Latent.jackNext = max(Latent.jackNext,0);
+    Latent.jackNext = min(Latent.jackNext,TaskParameters.GUI.JackMax);
+    Latent.jackNext = max(Latent.jackNext,1);
     Latent.jackNext = min(Latent.jackNext,3600); % Bpod limit
 else
     Latent.jackNext = nan;
