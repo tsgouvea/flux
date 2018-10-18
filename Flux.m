@@ -5,6 +5,7 @@ global BpodSystem
 global TaskParameters
 global Latent
 global sessionTimer
+addpath('SoftEvent')
 
 %% Task parameters
 TaskParameters = BpodSystem.ProtocolSettings;
@@ -39,6 +40,8 @@ if isempty(fieldnames(TaskParameters))
     TaskParameters.GUIPanels.Reward = {'rewFirst','rewLast','rewN','rewSum','IRI','rewA','rewB','rewC'};
 
     %% General
+    TaskParameters.GUI.isUDP = false;
+    TaskParameters.GUIMeta.isUDP.Style = 'checkbox';    
     TaskParameters.GUI.isJack = true;
     TaskParameters.GUIMeta.isJack.Style = 'checkbox';    
     TaskParameters.GUI.JackSize = 3; % reward size multipl factor
@@ -55,7 +58,7 @@ if isempty(fieldnames(TaskParameters))
     TaskParameters.GUI.Cued = true; % light on when reward available
     TaskParameters.GUIMeta.Cued.Style = 'checkbox';
     TaskParameters.GUI.Ports_ABC = '123';
-    TaskParameters.GUIPanels.General = {'Ports_ABC','Cued','Deplete','isBridgeUp','BridgeWhen','isJack','JackSize','JackMin','JackMax','JackLambda','JackNext'};
+    TaskParameters.GUIPanels.General = {'Ports_ABC','Cued','Deplete','isBridgeUp','BridgeWhen','isJack','JackSize','JackMin','JackMax','JackLambda','JackNext','isUDP'};
 
     %%
     TaskParameters.GUI = orderfields(TaskParameters.GUI);
@@ -89,6 +92,7 @@ else
     Latent.jackNext = nan;
 end
 TaskParameters.GUI.JackNext = Latent.jackNext;
+Latent.lastReward = nan;
 
 % ValveATime  = GetValveTimes(TaskParameters.GUI.rewFirst*(TaskParameters.GUI.rewLast/...
 %     TaskParameters.GUI.rewFirst)^(str2double(stateName(7))/TaskParameters.GUI.rewN), PortA);
@@ -125,6 +129,12 @@ RunSession = true;
 sessionTimer = tic;
 
 while RunSession
+    if TaskParameters.GUI.isUDP
+        [ds, ~, rx_timer] = UDPServerCreate('lo', 4725);
+        TaskParameters.ds = ds;
+        TaskParameters.rx_timer = rx_timer;
+    end
+    
     if  toc(sessionTimer) > TaskParameters.GUI.BridgeWhen*60
         TaskParameters.GUI.isBridgeUp = true ;
         set(BpodSystem.GUIHandles.ParameterGUI.Params{strcmp(BpodSystem.GUIData.ParameterGUI.ParamNames,'isBridgeUp')}, 'Value', TaskParameters.GUI.isBridgeUp);
@@ -156,6 +166,10 @@ while RunSession
 %     iTrial = iTrial + 1;
     try
         BpodSystem.GUIHandles = SessionSummary(BpodSystem.Data, BpodSystem.GUIHandles);
+    end
+    try
+        stop(rx_timer);
+        UDPServerClose(ds);
     end
 end
 end

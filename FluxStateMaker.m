@@ -44,10 +44,19 @@ if strncmp(stateName,'setup',5)
             end
         end
     end
-    if ~strcmp(stateName(end),'0') && TaskParameters.GUI.isJack && Latent.jackNext==0
+    if Latent.lastReward == 3 && TaskParameters.GUI.isJack && Latent.jackNext < 10
         stateJack = 'jack000';
-        stateJack(4+randi(2)) = '1';
-        smaChange = {smaChange{:}, 'SoftCode5',stateJack};
+        ndx = [1,2,3];
+        ndx = ndx(ndx~=Latent.lastReward);
+        ndx = randsample(ndx,1);
+        stateJack(4+ndx) = '1';
+        if rand>.5
+            stateJack = [stateJack(1:4) 'd' stateJack(5:end)];
+            smaChange = {smaChange{:}, 'SoftCode5',stateJack};
+        else
+            stateJack = [stateJack(1:4) 'p' stateJack(5:end)];
+            smaChange = {smaChange{:}, 'SoftCode6',stateJack};
+        end
     end
 elseif strncmp(stateName,'water',5)
     Port = floor(mod(TaskParameters.GUI.Ports_ABC/10^(3-find(ABC==stateName(end))),10));
@@ -87,7 +96,7 @@ elseif strncmp(stateName,'IRI',3)
     end
     smaOut = {smaOut{:}, 'GlobalTimerTrig', 4};
 elseif strncmp(stateName, 'jack',4)
-    ndxPatch = strfind(stateName,'1')-4;
+    ndxPatch = strfind(stateName,'1')-5;
     smaChange = {['Port' num2str(ndxPatch) 'In'],['bigWater_' ABC(ndxPatch)]};
     smaOut = {'WireState',2^(ndxPatch-1)};
 elseif strncmp(stateName, 'bigWater',8)
