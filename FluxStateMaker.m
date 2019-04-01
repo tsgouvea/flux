@@ -47,7 +47,7 @@ if strncmp(stateName,'setup',5)
     if TaskParameters.GUI.isJack
         stateJack = 'jack000';
         ndx = [1,2,3];
-        ndx = ndx(ndx~=Latent.lastReward);
+        if isfield(Latent,'lastReward'), ndx = ndx(ndx~=Latent.lastReward); end
         ndx = randsample(ndx,1);
 %         if any(strfind(stateName,'0'))
 %             if numel(strfind(stateName,'0'))==1
